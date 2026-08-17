@@ -1,0 +1,6 @@
+Now I would like pefrom end to end QA
+workflow using muliple agets and MCP
+servers that I have defined in current
+prompt file QAEnd2EndPromptFile.md.
+Pefrom the QA work flow step by step
+defined in thsi prompt file.

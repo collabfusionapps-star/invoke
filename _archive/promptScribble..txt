@@ -1,0 +1,40 @@
+
+
+
+
+<make request>
+
+meta prompt
+Choose ideal Agentic framework for this tasl
+think known knowns, known uknowns, unkkonwn knowns and unknown unknowns. choose the best agentic framework
+wargame production app with real files, mouse and keyboard clicks(using actual dom components of the application) as if user were interacting with the app live.
+only when real files produced/converted and verified by using the actual buttons/components users interact with within the application.
+ensure all modules,dependancies are present in the application that is required
+ask questions before proceeding
+
+
+
+
+
+
+
+
+in production: first sign in with google.
+google linked to account wehre we will use it for the license and subscription through lemonsqueezy
+
+
+
+
+
+
+in production: first sign in with google and googleAuth.
+google linked to account wehre we will use it for the license and subscription through lemonsqueezy
+step by step guide me and lets set up
+
+we have GitHub where we need to host the file
+
+
+I need to connect my github account to my Cloudflare. Meaning, I want to host my download file in my website, linking it up to my eTap. Tell me what you need and guide me step by step to do so. How does it work? And what do you require from me? Ask me questions before proceeding. 
+
+
+​

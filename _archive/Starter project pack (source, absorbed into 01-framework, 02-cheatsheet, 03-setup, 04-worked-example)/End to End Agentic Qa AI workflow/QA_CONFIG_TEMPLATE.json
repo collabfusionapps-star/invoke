@@ -1,0 +1,125 @@
+{
+  "story": {
+    "id": "[STORY_ID]",
+    "title": "[STORY_TITLE]",
+    "description": "[STORY_DESCRIPTION]",
+    "file_path": "user-stories/[STORY_ID].md"
+  },
+  "application": {
+    "url": { "from_env": "APP_URL", "default": "https://your-app.com" },
+    "name": "[APP_NAME]",
+    "description": "APP_URL is read from .env at runtime."
+  },
+  "credentials": {
+    "from_env": true,
+    "env_file": ".env",
+    "vars": {
+      "username": "TEST_USERNAME",
+      "password": "TEST_PASSWORD",
+      "app_url": "APP_URL"
+    },
+    "description": "Credentials read from .env at runtime. Never hardcoded."
+  },
+  "selectors": {
+    "username": "[SEL_USERNAME]",
+    "password": "[SEL_PASSWORD]",
+    "login_button": "[SEL_LOGIN_BUTTON]",
+    "error_container": "[SEL_ERROR_CONTAINER]",
+    "error_dismiss": "[SEL_ERROR_DISMISS]",
+    "page_title": "[SEL_PAGE_TITLE]",
+    "cart_badge": "[SEL_CART_BADGE]",
+    "cart_link": "[SEL_CART_LINK]",
+    "checkout_button": "[SEL_CHECKOUT_BUTTON]",
+    "continue_shopping": "[SEL_CONTINUE_SHOPPING]",
+    "continue_button": "[SEL_CONTINUE_BUTTON]",
+    "cancel_button": "[SEL_CANCEL_BUTTON]",
+    "finish_button": "[SEL_FINISH_BUTTON]",
+    "back_home_button": "[SEL_BACK_HOME]",
+    "first_name_field": "[SEL_FIRST_NAME]",
+    "last_name_field": "[SEL_LAST_NAME]",
+    "postal_code_field": "[SEL_POSTAL_CODE]",
+    "item_name": "[SEL_ITEM_NAME]",
+    "item_price": "[SEL_ITEM_PRICE]",
+    "item_description": "[SEL_ITEM_DESC]",
+    "item_container": "[SEL_ITEM_CONTAINER]",
+    "payment_info": "[SEL_PAYMENT_INFO]",
+    "shipping_info": "[SEL_SHIPPING_INFO]",
+    "subtotal_label": "[SEL_SUBTOTAL]",
+    "tax_label": "[SEL_TAX]",
+    "total_label": "[SEL_TOTAL]",
+    "success_header": "[SEL_SUCCESS_HEADER]",
+    "success_text": "[SEL_SUCCESS_TEXT]",
+    "success_icon": "[SEL_SUCCESS_ICON]"
+  },
+  "expected_texts": {
+    "page_title_products": "[TXT_PAGE_PRODUCTS]",
+    "page_title_cart": "[TXT_PAGE_CART]",
+    "page_title_checkout_info": "[TXT_PAGE_CHECKOUT_INFO]",
+    "page_title_checkout_overview": "[TXT_PAGE_OVERVIEW]",
+    "page_title_checkout_complete": "[TXT_PAGE_COMPLETE]",
+    "success_message": "[TXT_SUCCESS]",
+    "dispatch_message": "[TXT_DISPATCH]",
+    "error_first_name": "[TXT_ERR_FIRST_NAME]",
+    "error_last_name": "[TXT_ERR_LAST_NAME]",
+    "error_postal_code": "[TXT_ERR_POSTAL_CODE]",
+    "payment_info_text": "[TXT_PAYMENT_INFO]",
+    "shipping_info_text": "[TXT_SHIPPING_INFO]"
+  },
+  "url_patterns": {
+    "after_login": "[URL_AFTER_LOGIN]",
+    "cart_page": "[URL_CART]",
+    "checkout_info": "[URL_CHECKOUT_INFO]",
+    "checkout_overview": "[URL_CHECKOUT_OVERVIEW]",
+    "checkout_complete": "[URL_CHECKOUT_COMPLETE]"
+  },
+  "test_data": {
+    "first_name": "[TEST_FIRST_NAME]",
+    "last_name": "[TEST_LAST_NAME]",
+    "postal_code": "[TEST_POSTAL_CODE]",
+    "items": [
+      {
+        "name": "[ITEM_1_NAME]",
+        "price": "[ITEM_1_PRICE]",
+        "add_selector": "[ITEM_1_ADD_SEL]",
+        "remove_selector": "[ITEM_1_REMOVE_SEL]"
+      },
+      {
+        "name": "[ITEM_2_NAME]",
+        "price": "[ITEM_2_PRICE]",
+        "add_selector": "[ITEM_2_ADD_SEL]",
+        "remove_selector": "[ITEM_2_REMOVE_SEL]"
+      },
+      {
+        "name": "[ITEM_3_NAME]",
+        "price": "[ITEM_3_PRICE]",
+        "add_selector": "[ITEM_3_ADD_SEL]",
+        "remove_selector": "[ITEM_3_REMOVE_SEL]"
+      }
+    ],
+    "expected_totals": {
+      "item_total": "[EXP_ITEM_TOTAL]",
+      "tax": "[EXP_TAX]",
+      "grand_total": "[EXP_GRAND_TOTAL]",
+      "tax_rate": "[EXP_TAX_RATE]"
+    }
+  },
+  "browsers": ["[BROWSER_LIST]"],
+  "viewports": {
+    "mobile": "[VIEWPORT_MOBILE]",
+    "tablet": "[VIEWPORT_TABLET]",
+    "desktop": "[VIEWPORT_DESKTOP]"
+  },
+  "git": {
+    "repo_url": "[GIT_REPO_URL]",
+    "commit_message": "feat(tests): Add complete test suite for [STORY_ID]",
+    "default_branch": "main",
+    "local_only": false,
+    "description": "Set repo_url to empty string or 'local' for local-only commits."
+  },
+  "paths": {
+    "test_plan": "specs/[STORY_ID]-test-plan.md",
+    "test_scripts_dir": "tests/[STORY_ID]/",
+    "test_report": "test-results/[STORY_ID]-test-report.md",
+    "screenshots_dir": "test-results/screenshots/"
+  }
+}

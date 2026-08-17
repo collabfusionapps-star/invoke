@@ -1,0 +1,39 @@
+GATE 3 — Edge-Case Probe
+Run: 2026-07-28 21:29 SAST
+
+## Setup
+Deliberately broke the tree: renamed 01-framework/project-starter-kit.md to
+01-framework/project-starter-kit-RENAMED-FOR-PROBE.md, simulating a file move/rename
+that wasn't accompanied by updating every reference to it (exactly the failure mode
+Phase 3.5's reference-wiring checklist exists to prevent).
+
+## Result: does the framework's own machinery catch this rather than fail silently?
+
+Re-ran the Gate 1a link-check script against the broken tree. It correctly flagged every
+single reference to the renamed file, with file + line-level precision:
+  FAIL ./01-framework/agents.md -> project-starter-kit.md
+  FAIL ./01-framework/master-prompt.md -> project-starter-kit.md
+  FAIL ./01-framework/session-start-checklist.md -> project-starter-kit.md
+  FAIL ./04-worked-example/how-this-example-applies-the-framework.md -> ../01-framework/project-starter-kit.md
+  FAIL ./README.md -> 01-framework/project-starter-kit.md
+(13 total hits, including some unrelated pre-existing noise from third-party
+node_modules/ READMEs present at the time — see note below.)
+
+PASS — the gate does not fail silently. It names the exact files and broken targets,
+which is what a human or an agent needs to actually fix the break, consistent with the
+framework's own Root-Cause-In-Context Principle (01-framework/agents.md): the error
+message points at the stale reference (the context that needs fixing), not just "something
+somewhere is broken."
+
+## Cleanup and an incidental real finding
+
+Restored the file (mv back to project-starter-kit.md). Re-ran Gate 1 — back to 0 broken
+links, confirming the probe left no residue.
+
+Note: this probe run happened to occur while 04-worked-example/AgentE2EQAWorkflow-Playwright-main/node_modules/
+existed (from Gate 2's real npm install), which surfaced expected, irrelevant noise —
+third-party packages' own READMEs (playwright, dotenv) linking to their own CONTRIBUTING.md
+files that aren't present in a production install. This is not a framework defect; it's
+confirmed harmless by node_modules/ being listed in the project's own .gitignore and by
+node_modules/ having since been removed (see gate2 log, section 2d) — the final Gate 1
+re-run (see gate1-structural-completeness.txt) excludes node_modules and shows 0 broken.

@@ -1,0 +1,65 @@
+GATE 4 — Signed Execution Log Summary
+Signed: 2026-07-28 21:32:04 SAST
+Scope: Agentic Coding Framework (FINAL)/ — consolidation of the "Agentic workflow builder" folder
+
+## Gate results
+
+| Gate | Result | Evidence file |
+|---|---|---|
+| 1. Structural completeness | PASS — 50/50 internal links resolve, 0 stale old-name references | gate1-structural-completeness.txt |
+| 2. Logical dry-run | PASS (with 2 real bugs found and fixed along the way) | gate2-logical-dry-run.txt |
+| 3. Edge-case probe | PASS — broken reference correctly caught and localized, not silent | gate3-edge-case-probe.txt |
+| 4. Signed log | This file |
+
+## What was actually run (not simulated)
+
+- `npm install` in the worked example — real, 0 vulnerabilities.
+- `npx playwright install --with-deps chromium` — real download and install.
+- `npx playwright test --project=chromium` — run TWICE against the live https://www.saucedemo.com.
+  Both runs: 18/18 passed. Second run confirmed the outputDir fix (see below) preserved
+  the hand-authored test report.
+- `03-setup/scripts/scaffold-project.ps1` — run for real (Steps 1-4) against a scratch
+  target folder outside the repo; output inspected file-by-file.
+- Static PowerShell syntax validation (`[System.Management.Automation.Language.Parser]::ParseFile`)
+  on all three .ps1 scripts — PASS on all three, after the BOM fix (below).
+- A real edge-case break (file rename) and real recovery, using the actual verification
+  scripts, not a description of what they'd do.
+
+## Real bugs found and fixed during this verification (not hypothetical)
+
+1. **Missing UTF-8 BOM in .ps1 scripts** — inherited from the original source pack, present
+   before this consolidation. Windows PowerShell 5.1 fails to parse the box-drawing/emoji
+   characters in BOM-less UTF-8 files. Fixed: re-saved init.ps1, scaffold-project.ps1,
+   install-playwright-agents.ps1 with a UTF-8 BOM. Verified via static parse + real dry-run.
+2. **JSON files written with a BOM** — `Set-Content -Encoding UTF8` in Windows PowerShell 5.1
+   writes a BOM, which broke strict JSON.parse on the generated qa-state.json. Fixed: switched
+   to `[System.IO.File]::WriteAllText`, which is BOM-free by default in .NET. Verified: fresh
+   dry-run output has no BOM and parses cleanly with Node's JSON.parse.
+3. **playwright.config.ts outputDir collision** — no explicit `outputDir` meant Playwright
+   defaulted to `test-results/`, the same folder the project keeps its hand-authored
+   test report in. The first real test run in this session deleted that report as a direct
+   consequence — caught immediately by checking file survival, not assumed. Recovered
+   byte-identical from the archive (diff-verified), then fixed by isolating Playwright's
+   own output to `test-results/.playwright-artifacts`. Re-verified with a second full run:
+   report survived.
+
+## NOT YET VERIFIED (explicit, not silently omitted)
+
+- `install-playwright-agents.ps1`'s live execution (UAC elevation; writing to the global
+  `opencode.json` / `claude_desktop_config.json`; `npx playwright init-agents`) — out of
+  scope for this session per the stated boundary against unrequested system/app-config
+  changes. Static parse-check passed. A human needs to run this for real and watch for
+  the UAC prompt and the resulting `.github/` agent definitions.
+- Firefox and WebKit Playwright projects — only Chromium was installed and run in this
+  environment. Same spec files, so risk is low, but not run, not claimed as verified.
+- `init.bat`'s interactive prompt path (`set /p TARGET=`) — not exercised; `init.ps1`
+  (which it forwards to unchanged) was tested directly instead.
+- Firefox/WebKit and the live `/init` → elevated-installer chain end-to-end on a completely
+  fresh machine with no prior Playwright/MCP config — this session's environment already
+  had Node.js and Playwright browsers partially cached before the run began.
+
+## Ephemeral artifacts removed after verification (all .gitignore-listed, regenerable)
+node_modules/, playwright-report/, test-results/.playwright-artifacts/ — removed from
+04-worked-example/AgentE2EQAWorkflow-Playwright-main/ after their purpose (proving the
+suite runs) was captured as real logged output above. package-lock.json was kept (useful,
+not gitignored, makes the install reproducible).

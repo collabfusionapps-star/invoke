@@ -1,0 +1,24 @@
+Phase 0 — First time, new project:
+
+# From the starter pack root, scaffold into your target project:
+.\init.ps1 -Target "C:\Users\Mohamed\Desktop\my-new-project"
+Or double-click init.bat and enter the path when prompted.
+
+This will:
+
+Copy the entire End to End Agentic Qa AI workflow folder into your project
+Create qa-config.json from template (ready to edit)
+Create .env from .env.example (ready to fill)
+Initialize qa-state.json + TELEMETRY_LOG.ndjson
+Launch install-playwright-agents.ps1 as admin (auto-elevates) → installs @playwright/mcp + npx playwright init-agents
+Phase 1 — Customize (edit these files in your project):
+
+File	What to fill
+qa-config.json	Story ID, URLs, selectors, test data
+.env	APP_URL, TEST_USERNAME, TEST_PASSWORD
+user-stories/SCRUM-101-ecommerce-checkout[edit to applicable application].md	Your actual ACs
+Phase 2 — Run the workflow (in your AI tool, say):
+
+"I want to QA story SCRUM-101. Read SESSION_START.md and begin."
+
+The agent reads SESSION_START.md → sees /init check → proceeds to Step 0 → Step 1 (read story) → ... → Step 8 (audit). Results logged to qa-state.json + TELEMETRY_LOG.ndjson.

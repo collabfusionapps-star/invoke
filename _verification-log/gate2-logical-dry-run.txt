@@ -1,0 +1,94 @@
+GATE 2 — Logical Dry-Run
+Run: 2026-07-28 21:28:47 SAST
+
+## 2a. Playwright suite — REAL execution against live saucedemo.com
+
+Environment: node v24.18.0, npm 11.16.0
+Command: npm install (in 04-worked-example/AgentE2EQAWorkflow-Playwright-main/)
+Result: added 4 packages, 0 vulnerabilities
+
+Command: npx playwright install --with-deps chromium
+Result: chromium 151.0.7922.34 installed successfully
+
+Command: npx playwright test --project=chromium
+Result: 18 passed (18.4s) — real browser run against https://www.saucedemo.com, all 5 spec files, 0 failures
+  (firefox/webkit projects not run — only chromium was installed in this environment; see NOT YET VERIFIED note below)
+
+## 2b. init.ps1 / scaffold-project.ps1 — REAL dry-run against a scratch target
+
+Method: ran scaffold-project.ps1 directly (Steps 1-4, real file I/O) against a scratch
+target folder outside the repo. Step 5 (elevated installer launch) was stubbed to a
+Test-Path check instead of actually calling Start-Process -Verb RunAs, per this task's
+explicit scope boundary against triggering UAC elevation / writing global app config
+without separate authorization.
+
+Result: PASS. Verified by inspecting the real scaffolded output:
+  - Framework copied to <target>\Agentic Coding Framework (FINAL)\
+  - _archive/, _verification-log/, and 04-worked-example/AgentE2EQAWorkflow-Playwright-main/
+    correctly stripped from the copy (toRemove logic works)
+  - 04-worked-example/qa-config.json created from QA_CONFIG_TEMPLATE.json
+  - 04-worked-example/.env created from .env.example
+  - 04-worked-example/qa-state.json created with real today's date (2026-07-28), TELEMETRY_LOG.ndjson created empty
+  - Step 5's resolved installer path (03-setup\scripts\install-playwright-agents.ps1) confirmed to exist: True
+
+## 2c. Bug found and fixed during this real dry-run (not simulated, not hypothetical)
+
+Finding: the original .ps1 scripts (inherited unchanged from the source pack) were saved
+as UTF-8 WITHOUT a byte-order mark. Windows PowerShell 5.1 (powershell.exe, the version
+installed in this environment) misreads non-ASCII characters (box-drawing borders, emoji)
+in BOM-less UTF-8 .ps1 files, causing a real parse failure on first run:
+  'Unexpected token ... in expression or statement' at multiple lines.
+Verified this was pre-existing, not introduced by this consolidation, by checking the
+byte-identical archived original (_archive/.../init.ps1) — same missing BOM.
+Fix: re-saved init.ps1, scaffold-project.ps1, install-playwright-agents.ps1 with a UTF-8
+BOM. Confirmed fix by re-running the dry-run end-to-end successfully (2b above) and by
+static-parsing all three files with [System.Management.Automation.Language.Parser]::ParseFile
+-> PARSE OK for all three.
+
+Second finding from the same dry-run: Set-Content -Encoding UTF8 (used to write
+qa-state.json / TELEMETRY_LOG.ndjson) also writes a BOM in Windows PowerShell 5.1, which
+broke strict JSON.parse (confirmed: Node's JSON.parse threw 'Unexpected token' on the
+BOM-prefixed qa-state.json). Fixed by switching to [System.IO.File]::WriteAllText, which
+defaults to UTF-8 without BOM in .NET. Re-verified: qa-state.json from a fresh dry-run
+now has no BOM and JSON.parse succeeds.
+
+## NOT YET VERIFIED
+
+- install-playwright-agents.ps1's actual execution (UAC elevation, writing to the global
+  opencode.json/claude_desktop_config.json, running 'npx playwright init-agents') was
+  deliberately NOT run for real in this session — that crosses into modifying system/app
+  config, which needs your explicit separate go-ahead. Static parse-check passed (see
+  above); live execution needs a human to run it and watch for the UAC prompt.
+- firefox and webkit Playwright projects (configured in playwright.config.ts) were not
+  installed/run in this environment — only chromium was verified. Same specs, so failure
+  risk is low, but not run, not claimed as verified.
+- init.bat (the double-click entry point) was not run — init.ps1 is single-line-forwarded
+  from it and was tested directly; init.bat's own interactive 'set /p TARGET=' prompt
+  cannot be exercised non-interactively in this environment.
+
+## 2d. Second real bug found during the SAME dry-run: outputDir collision
+
+Finding: playwright.config.ts had no explicit `outputDir`, so Playwright defaulted to
+`test-results/` — the SAME folder this project keeps its hand-authored
+`SCRUM-101-checkout-test-report.md` in (per WORKFLOW_MANIFEST.json's artifacts.test_reports
+convention). Playwright clears its output directory before every run. The first real test
+run in this session (2a above) silently deleted the pre-existing test report as a direct
+consequence.
+
+Caught by: manually verifying file survival after the run (not assumed) — `ls
+test-results/SCRUM-101-checkout-test-report.md` came back "No such file or directory"
+immediately after the first `npx playwright test` run.
+
+Recovery: the deleted file was recovered byte-identical from the archived original
+(`_archive/.../AgentE2EQAWorkflow-Playwright-main/test-results/SCRUM-101-checkout-test-report.md`),
+confirmed via `diff` (zero output = identical).
+
+Fix: added `outputDir: 'test-results/.playwright-artifacts'` to playwright.config.ts so
+Playwright's own trace/screenshot output is isolated from the hand-authored report.
+
+Re-verification: ran `npx playwright test --project=chromium` a second time after the fix.
+Result: 18 passed (7.5s) again, AND `test-results/SCRUM-101-checkout-test-report.md`
+confirmed still present and untouched afterward (`ls -la` shows original size/timestamp
+preserved). Ephemeral artifacts (node_modules/, playwright-report/,
+test-results/.playwright-artifacts/) were removed after verification — all are already
+listed in this project's own .gitignore as regenerable, not meant to ship.

@@ -1,0 +1,153 @@
+{
+  "workflow": "End-to-End Agentic QA Pipeline",
+  "version": "1.1",
+  "description": "8-step AI-agent-driven QA pipeline using Playwright MCP and official Playwright Test Agents (planner, generator, healer)",
+  "entry_point": "QAEnd2EndPromptFile.md",
+  "short_trigger": "Prompt for End-to-End QA Workflow with Natural.txt",
+  "diagram": "Workflow diagram.png",
+  "config_template": "QA_CONFIG_TEMPLATE.json",
+  "example_output": "AgentE2EQAWorkflow-Playwright-main/",
+  "install_instructions": "scripts/",
+
+  "required_mcp_servers": [
+    {
+      "name": "Playwright MCP",
+      "package": "@playwright/mcp",
+      "description": "Browser automation tools (navigation, forms, screenshots, assertions, etc.)",
+      "install_url": "https://playwright.dev/mcp/introduction",
+      "config_key": "mcpServers.playwright"
+    },
+    {
+      "name": "GitHub MCP",
+      "description": "Git operations (commit, push, PR management)",
+      "install_url": "https://github.com/github/github-mcp-server"
+    }
+  ],
+
+  "required_agents": [
+    {
+      "name": "🎭 Playwright Test Planner",
+      "command": "npx playwright init-agents --loop=[PLATFORM]",
+      "description": "Explores the app and produces a Markdown test plan",
+      "source": "https://playwright.dev/docs/test-agents#-planner"
+    },
+    {
+      "name": "🎭 Playwright Test Generator",
+      "command": "npx playwright init-agents --loop=[PLATFORM]",
+      "description": "Transforms Markdown plan into Playwright Test files",
+      "source": "https://playwright.dev/docs/test-agents#-generator"
+    },
+    {
+      "name": "🎭 Playwright Test Healer",
+      "command": "npx playwright init-agents --loop=[PLATFORM]",
+      "description": "Executes tests and auto-heals failures",
+      "source": "https://playwright.dev/docs/test-agents#-healer"
+    }
+  ],
+
+  "steps": [
+    {
+      "step": 1,
+      "name": "Read User Story",
+      "description": "Reads the user story from user-stories/[STORY_ID].md, summarizes requirements and ACs",
+      "input": "user-stories/[STORY_ID].md",
+      "output": "Summary of user story, AC list, app URL, credentials"
+    },
+    {
+      "step": 2,
+      "name": "Create Test Plan",
+      "agent": "playwright-test-planner",
+      "description": "Explores the app and creates a comprehensive test plan",
+      "output": "specs/[STORY_ID]-test-plan.md"
+    },
+    {
+      "step": 3,
+      "name": "Perform Exploratory Testing",
+      "tools": ["@playwright/mcp browser tools"],
+      "description": "Manual step-through of each test scenario using Playwright MCP",
+      "output": "Screenshots, element selectors, observations"
+    },
+    {
+      "step": 4,
+      "name": "Generate Automation Scripts",
+      "agent": "playwright-test-generator",
+      "description": "Creates Playwright TypeScript spec files from test plan + exploratory findings",
+      "output": "tests/[STORY_ID]/*.spec.ts"
+    },
+    {
+      "step": 5,
+      "name": "Execute and Heal Tests",
+      "agent": "playwright-test-healer",
+      "description": "Runs tests, auto-heals failures, re-runs until stable",
+      "output": "Healed test scripts + healing summary"
+    },
+    {
+      "step": 6,
+      "name": "Create Test Report",
+      "description": "Compiles manual + automated results into comprehensive report",
+      "output": "test-results/[STORY_ID]-test-report.md"
+    },
+    {
+      "step": 7,
+      "name": "Commit to Git",
+      "tools": ["GitHub MCP"],
+      "description": "Commits all test artifacts with conventional commit message",
+      "output": "Git commit pushed to [GIT_REPO_URL]"
+    },
+    {
+      "step": 8,
+      "name": "Audit",
+      "role": "impartial auditor",
+      "description": "Role-separated audit pass. Reads all artifacts without trusting the producer. Verifies coverage, no hardcoded secrets, assertion quality, edge cases.",
+      "output": "test-results/audit/audit-[STORY_ID].md"
+    }
+  ],
+
+  "artifacts": {
+    "user_stories": "user-stories/",
+    "test_plans": "specs/",
+    "test_scripts": "tests/",
+    "test_reports": "test-results/",
+    "screenshots": "test-results/screenshots/",
+    "agent_definitions": ".github/",
+    "audit_reports": "test-results/audit/",
+    "telemetry": "TELEMETRY_LOG.ndjson",
+    "healing_patterns": ".github/healing-patterns.json",
+    "qa_state": "qa-state.json"
+  },
+
+  "platforms": {
+    "opencode": {
+      "loop_flag": "opencode",
+      "mcp_config_file": "opencode.json",
+      "mcp_config_key": "mcpServers"
+    },
+    "claude": {
+      "loop_flag": "claude",
+      "mcp_config_file": "claude_desktop_config.json",
+      "mcp_config_key": "mcpServers"
+    },
+    "vscode": {
+      "loop_flag": "vscode",
+      "mcp_config_file": ".vscode/mcp.json",
+      "mcp_config_key": "mcpServers"
+    }
+  },
+
+  "session_continuity": {
+    "bootstrap_file": "../SESSION_START.md",
+    "agent_guide": "../AGENTS.md",
+    "qa_cumulative_state": "qa-state.json",
+    "telemetry_format": "ndjson (append-only, one JSON object per line per step)",
+    "telemetry_warning": "TELEMETRY_LOG.ndjson appends every step. Never truncate. Rotate by archiving after 1000 lines."
+  },
+
+  "feedback_loop": {
+    "test_report_updates": [
+      { "doc": "RISKS.md", "trigger": "Defects found in test execution" },
+      { "doc": "TASK_BACKLOG.md", "trigger": "New tasks from uncovered scenarios" },
+      { "doc": "PROJECT_STATE.md", "trigger": "Health indicators (pass rate, coverage)" },
+      { "doc": "DEFINITION_OF_DONE.md", "trigger": "Test coverage thresholds met/failed" }
+    ]
+  }
+}

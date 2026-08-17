@@ -1,0 +1,11 @@
+I would like to perform the end-to-end QA
+workflow using the Playwright agents and MCP
+servers that I have defined in the current
+prompt file QAEnd2EndPromptFile.md.
+
+Run `/init` first if the project has not been
+scaffolded yet (no qa-config.json or .env).
+
+Start with Step 0 (GitHub, .env, /init check),
+then perform the QA workflow step by step
+as defined in that prompt file.

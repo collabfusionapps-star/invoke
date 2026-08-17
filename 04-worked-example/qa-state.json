@@ -1,0 +1,14 @@
+{
+  "last_updated": "[YYYY-MM-DD]",
+  "stories_tested": [],
+  "total_test_suites": 0,
+  "total_individual_tests": 0,
+  "latest_pass_rate": null,
+  "last_audit_date": null,
+  "last_audit_result": null,
+  "healed_tests_total": 0,
+  "healed_tests_this_run": 0,
+  "escalated_patterns_total": 0,
+  "flaky_tests": [],
+  "untested_stories": []
+}

@@ -1,0 +1,62 @@
+GATE 1 — Structural Completeness (final re-run after Gate 2/3 work)
+Run: 2026-07-28 21:31:16 SAST
+
+## 1a. Markdown link target existence check
+
+OK   ./01-framework/agents.md -> project-starter-kit.md
+OK   ./01-framework/agents.md -> session-start-checklist.md
+OK   ./01-framework/agents.md -> project-starter-kit.md
+OK   ./01-framework/global-rules.md -> agents.md#root-cause-in-context-principle
+OK   ./01-framework/master-prompt.md -> project-starter-kit.md
+OK   ./01-framework/project-starter-kit.md -> ../04-worked-example/
+OK   ./01-framework/project-starter-kit.md -> ../04-worked-example/how-this-example-applies-the-framework.md
+OK   ./01-framework/project-starter-kit.md -> ../03-setup/setup-guide.md
+OK   ./01-framework/project-starter-kit.md -> ../04-worked-example/WORKFLOW_MANIFEST.json
+OK   ./01-framework/project-starter-kit.md -> ../04-worked-example/TEMPLATE_prompt_workflow.md
+OK   ./01-framework/project-starter-kit.md -> ../04-worked-example/QA_CONFIG_TEMPLATE.json
+OK   ./01-framework/project-starter-kit.md -> ../04-worked-example/AgentE2EQAWorkflow-Playwright-main/
+OK   ./01-framework/project-starter-kit.md -> session-start-checklist.md
+OK   ./01-framework/project-starter-kit.md -> ../README.md
+OK   ./01-framework/session-start-checklist.md -> project-starter-kit.md
+OK   ./01-framework/session-start-checklist.md -> master-prompt.md
+OK   ./01-framework/session-start-checklist.md -> project-starter-kit.md
+OK   ./01-framework/session-start-checklist.md -> ../04-worked-example/WORKFLOW_MANIFEST.json
+OK   ./01-framework/session-start-checklist.md -> ../04-worked-example/qa-state.json
+OK   ./02-cheatsheet/ai-glossary.md -> claude-code-cheatsheet.md
+OK   ./04-worked-example/how-this-example-applies-the-framework.md -> ../01-framework/project-starter-kit.md
+OK   ./04-worked-example/how-this-example-applies-the-framework.md -> user-stories/
+OK   ./04-worked-example/how-this-example-applies-the-framework.md -> AgentE2EQAWorkflow-Playwright-main/user-stories/SCRUM-101-ecommerce-checkout.md
+OK   ./04-worked-example/how-this-example-applies-the-framework.md -> AgentE2EQAWorkflow-Playwright-main/specs/saucedemo-checkout-test-plan.md
+OK   ./04-worked-example/how-this-example-applies-the-framework.md -> AgentE2EQAWorkflow-Playwright-main/tests/saucedemo-checkout/
+OK   ./04-worked-example/how-this-example-applies-the-framework.md -> AgentE2EQAWorkflow-Playwright-main/test-results/SCRUM-101-checkout-test-report.md
+OK   ./04-worked-example/how-this-example-applies-the-framework.md -> TEMPLATE_prompt_workflow.md
+OK   ./04-worked-example/how-this-example-applies-the-framework.md -> QAEnd2EndPromptFile.md
+OK   ./04-worked-example/how-this-example-applies-the-framework.md -> test-results/audit/template-audit-report.md
+OK   ./04-worked-example/how-this-example-applies-the-framework.md -> AgentE2EQAWorkflow-Playwright-main/README.md
+OK   ./04-worked-example/how-this-example-applies-the-framework.md -> ../03-setup/setup-guide.md
+OK   ./04-worked-example/how-this-example-applies-the-framework.md -> ../_verification-log/
+OK   ./04-worked-example/how-this-example-applies-the-framework.md -> AgentE2EQAWorkflow-Playwright-main/specs/saucedemo-checkout-test-plan.md
+OK   ./README.md -> 01-framework/
+OK   ./README.md -> 02-cheatsheet/
+OK   ./README.md -> 03-setup/
+OK   ./README.md -> 04-worked-example/
+OK   ./README.md -> _verification-log/
+OK   ./README.md -> _archive/
+OK   ./README.md -> 01-framework/session-start-checklist.md
+OK   ./README.md -> 03-setup/setup-guide.md
+OK   ./README.md -> 01-framework/master-prompt.md
+OK   ./README.md -> 01-framework/project-starter-kit.md
+OK   ./README.md -> 01-framework/session-start-checklist.md
+OK   ./README.md -> 01-framework/global-rules.md
+OK   ./README.md -> 01-framework/global-rules.md
+OK   ./README.md -> 01-framework/agents.md#root-cause-in-context-principle
+OK   ./README.md -> 04-worked-example/
+OK   ./README.md -> 04-worked-example/how-this-example-applies-the-framework.md
+OK   ./README.md -> _verification-log/
+
+Total links checked: 50
+Broken: 0
+
+## 1b. Old filename/folder-name sweep (outside _archive)
+
+Zero hits outside _archive/ — no stale old-name references. PASS.
